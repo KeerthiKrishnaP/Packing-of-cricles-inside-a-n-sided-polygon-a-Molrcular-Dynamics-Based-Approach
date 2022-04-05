@@ -1,3 +1,9 @@
+#Created by Keerthi Krishna PARVATHANENI 10/01/2018
+# This is code will generate the random distribution of the circular particles in an n sided polygon.
+# Here we use a collision based event model described in wrok of 
+# " https://torquatocpanel.deptcpanel.princeton.edu/wp-content/uploads/files/publications/papers//paper-229.pdf  "
+# Aleksandar Donev a,b, Salvatore Torquato a,b,c,*, Frank H. Stillinger
+# Here we improve this method such that we can control the local packing fraction in the polygon.
 # -*- coding: utf-8 -*-
 import numpy as np
 import scipy.stats as stats
@@ -8,20 +14,23 @@ import datetime
 import time
 from InputReader import *
 
+# Local constants
 PI=np.pi
 SQRT=np.sqrt
 INF = float('inf')
 
-
+# Compute the cross product of the vextor
 def Cross_Product(Point_1,Point_2):
     Cross_Product_value = Point_1[0]*Point_2[1]-Point_1[1]*Point_2[0]
     #print Cross_Product_value
     return Cross_Product_value    
 
+# Compute dot product of the vector
 def Dot_Product(Vector_1,Vector_2):
     Dot_Product_Value = Vector_1[0]*Vector_2[0]+Vector_1[1]*Vector_2[1] 
     return Dot_Product_Value
-    
+ 
+# sort the vertices based on the collision time  based on the spartial distribution from the fixed wall and flexible walls  
 def AssortBdrNds(VertexList):
     AssortedList = []   
     Temp = sorted(VertexList)
@@ -77,7 +86,6 @@ def AssortBdrNds(VertexList):
 #Test1 = [[-4,2],[-2,-2],[-4,-1],[3,2],[3,-2],[5,1],[0,-2],[-3,2],[-2.3,2],[-3.5,2],[-1,2],[0,-3]]
 
 #Test = AssortBdrNds(Test1)
-
 
 def Map(Qdg_Nodes,IsoparametricCS_Point):
     Ksi = IsoparametricCS_Point[0]
@@ -309,6 +317,8 @@ def Transform_from_Global_to_Local(GlobalX,GlobalY,SIN,COS):
 #gx = Transform_from_Local_to_Global(l[0],l[1],sin,cos)[0]
 #print l,gx
 
+#After every collision the direction matrix must be updated
+# this function will compute the updated direction matrix
 def Calculate_vtclOrient(GivenPoint,EndPoint1,EndPoint2):
     m = GivenPoint[0]
     n = GivenPoint[1]
@@ -334,6 +344,8 @@ def Calculate_vtclOrient(GivenPoint,EndPoint1,EndPoint2):
 #print Calculate_vtclOrient([3,3],[0,-0],[0,-2])
 #print Calculate_vtclOrient([3,3],[0,-2],[0,-0])
 
+
+#Calculation of the collision time in generlized co-ordiantes
 def Calculate_gnrlzdTime(cTime,Gamma,Seed_List,AllEdges):
     Edges = []
     for edge in AllEdges:
